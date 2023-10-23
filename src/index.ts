@@ -67,7 +67,7 @@ function builder<T extends Clients>(
     async set(key, value, ttl) {
       if (!isCacheable(value))
         throw new NoCacheableError(`"${value}" is not a cacheable value`);
-      const t = ttl === undefined ? options?.ttl : ttl;
+      const t = typeof ttl === 'object' ? ttl.ttl || options?.ttl : ttl === undefined ? options?.ttl : ttl;
       if (t !== undefined && t !== 0)
         await redisCache.set(key, getVal(value), { PX: t });
       else await redisCache.set(key, getVal(value));
